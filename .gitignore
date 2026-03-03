@@ -1,0 +1,19 @@
+# Entorno virtual
+.venv/
+venv/
+
+# Archivos compilados
+__pycache__/
+*.pyc
+
+# Base de datos local
+*.db
+
+# Archivos subidos
+static/uploads/
+
+# Archivos de IDE
+.idea/
+
+# Variables de entorno
+.env
