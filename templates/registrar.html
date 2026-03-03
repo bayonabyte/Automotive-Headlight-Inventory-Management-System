@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar</title>
+    <link rel="stylesheet" href="../static/style_registrar.css" />
+</head>
+<body>
+    <div class="top_bar">
+        <a href="/">← Volver al Inicio</a>
+    </div>
+    <h1>Registrar un nuevo producto</h1>
+
+    {% if codigo %}
+        <p class="success">Producto registrado con código: {{ codigo }}</p>
+    {% endif %}
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        <div>
+            <label for="marca">Marca:</label>
+            <select name="marca" id="marca" required>
+                <option value="">Seleccione una marca</option>
+                {% for marca in marcas %}
+                    <option value="{{ marca }}">{{ marca }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <div>
+            <label for="modelo">Modelo:</label>
+            <select id="modelo" name="modelo" required>
+                <option value="">Seleccione modelo</option>
+            </select>
+            <script>
+                const modelos = {{ modelos | tojson }};
+                const marcaSelect = document.getElementById("marca");
+                const modeloSelect = document.getElementById("modelo");
+
+                marcaSelect.addEventListener("change", function() {
+                    const marcaSeleccionada = this.value;
+
+                    modeloSelect.innerHTML = '<option value="">Seleccione modelo</option>';
+
+                    if (marcaSeleccionada in modelos) {
+                        for (let modelo in modelos[marcaSeleccionada]) {
+                            let option = document.createElement("option");
+                            option.value = modelo;
+                            option.text = modelo;
+                            modeloSelect.appendChild(option);
+                        }
+                    }
+                });
+            </script>
+        </div>
+        <br>
+        <div>
+            <label for="anio">Año:</label>
+            <input type="number" id="anio" name="anio" min="2000" max="{{ anio_actual }}" required>
+        </div>
+        <br>
+        <div>
+            <label for="lado_der">Derecha</label>
+            <input type="radio" id="lado_der" name="lado" value="DER" required>
+            <label for="lado_izq">Izquierda</label>
+            <input type="radio" id="lado_izq" name="lado" value="IZQ" required>
+        </div>
+        <br>
+        <div>
+            <label for="ubicacion">Ubicación del producto:</label>
+            <input type="text" id="ubicacion" name="ubicacion" required>
+        </div>
+        <br>
+        <div class="imagen">
+            <label for="imagen">Subir una imagen:</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*" required>
+        </div>
+        <br>
+        <button type="submit">Registrar</button>
+    </form>
+</body>
+</html>

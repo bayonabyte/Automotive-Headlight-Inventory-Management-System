@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Producto</title>
+    <link rel="stylesheet" href="../static/style_editar.css" />
+</head>
+<body>
+<div class="top_bar">
+    <a href="/">← Volver al Inicio</a>
+</div>
+<h1>Modificar Producto</h1>
+
+<form method="post">
+
+    <label>Marca:</label>
+    <select name="marca" id="marca" required>
+        {% for marca in marcas %}
+            <option value="{{ marca }}"
+            {% if marca == producto[1] %}selected{% endif %}>
+                {{ marca }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <br><br>
+
+    <label>Modelo:</label>
+    <select name="modelo" id="modelo" required></select>
+
+    <br><br>
+
+    <label>Año:</label>
+    <input type="number" name="anio" value="{{ producto[3] }}" required>
+
+    <br><br>
+
+    <div class="radio-group">
+        <label>
+            <input type="radio" name="lado" value="DER"
+            {% if producto[4] == "DER" %}checked{% endif %}>
+            Derecha
+        </label>
+
+        <label>
+            <input type="radio" name="lado" value="IZQ"
+            {% if producto[4] == "IZQ" %}checked{% endif %}>
+            Izquierda
+        </label>
+    </div>
+
+    <br><br>
+
+    <label>Ubicación:</label>
+    <input type="text" name="ubicacion"
+           value="{{ producto[5] }}" required>
+
+    <br><br>
+
+    <button type="submit">Guardar Cambios</button>
+</form>
+
+<script>
+const modelos = {{ modelos | tojson }};
+const marcaSelect = document.getElementById("marca");
+const modeloSelect = document.getElementById("modelo");
+
+const modeloActual = "{{ producto[2] }}";
+
+function cargarModelos(marcaSeleccionada) {
+
+    modeloSelect.innerHTML = "";
+
+    if (marcaSeleccionada in modelos) {
+
+        for (let modelo in modelos[marcaSeleccionada]) {
+
+            let option = document.createElement("option");
+            option.value = modelo;
+            option.text = modelo;
+
+            if (modelo === modeloActual) {
+                option.selected = true;
+            }
+
+            modeloSelect.appendChild(option);
+        }
+    }
+}
+
+cargarModelos(marcaSelect.value);
+
+marcaSelect.addEventListener("change", function() {
+    cargarModelos(this.value);
+});
+</script>
+
+</body>
+</html>
