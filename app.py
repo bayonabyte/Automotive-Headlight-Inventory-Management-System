@@ -1,11 +1,13 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 import sqlite3
 import os
 from werkzeug.utils import secure_filename
-from datetime import datetime
+from datetime import datetime, timedelta
 import math
 
 app = Flask(__name__)
+app.secret_key = "clave_segura"
+app.permanent_session_lifetime = timedelta(days=6)
 
 #Base de datos
 def get_db():
@@ -269,7 +271,23 @@ modelos = {
 def generar_codigo(marca, modelo, anio, lado):
     return f"FAR-{marcas[marca]}-{modelos[marca][modelo]}-{anio}-{lado}"
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        usuario = request.form['usuario']
+        password = request.form['password']
+        recordar = request.form.get('recordar')
+
+        if usuario == "Armando Faros" or password == "Taller_Armando":
+            if recordar:
+                session.permanent = True
+            session['usuario'] = usuario
+            return redirect("index")
+        return render_template('login.html',
+                           error="Usuario o contraseña incorrectas")
+    return render_template('login.html')
+
+@app.route('/index')
 def index():
     conexion = get_db()
     cursor = conexion.cursor()
