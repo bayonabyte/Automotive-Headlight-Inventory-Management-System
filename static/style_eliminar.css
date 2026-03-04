@@ -76,16 +76,6 @@ tr:hover {
     color: #c0392b;
     font-weight: bold;
 }
-
-.top_bar_back {
-    padding: 20px 40px;
-}
-
-.top_bar_back a {
-    text-decoration: none;
-    font-weight: bold;
-    color: #2d6cdf;
-}
 .contenedor-vacio {
     display: flex;
     justify-content: center;
@@ -105,4 +95,10 @@ tr:hover {
     color: white;
     text-decoration: none;
     border-radius: 5px;
+}
+
+.back a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #2d6cdf;
 }

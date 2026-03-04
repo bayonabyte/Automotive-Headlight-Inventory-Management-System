@@ -7,21 +7,22 @@
     <link rel="stylesheet" href="../static/style_registrar.css" />
 </head>
 <body>
-    <div class="top_bar">
+    <div class="back">
         <a href="index">← Volver al Inicio</a>
     </div>
-    <h1>Registrar un nuevo producto</h1>
+    <div class="registrar-container">
+        <h1>Registrar un nuevo producto</h1>
+        {% if codigo %}
+            <p class="success">Producto registrado con código:<br>
+                {{ codigo }}
+            </p>
+        {% endif %}
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
 
-    {% if codigo %}
-        <p class="success">Producto registrado con código: {{ codigo }}</p>
-    {% endif %}
+        <form method="post" enctype="multipart/form-data">
 
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
-
-    <form method="post" enctype="multipart/form-data">
-        <div>
             <label for="marca">Marca:</label>
             <select name="marca" id="marca" required>
                 <option value="">Seleccione una marca</option>
@@ -29,58 +30,56 @@
                     <option value="{{ marca }}">{{ marca }}</option>
                 {% endfor %}
             </select>
-        </div>
-        <br>
-        <div>
+
             <label for="modelo">Modelo:</label>
             <select id="modelo" name="modelo" required>
-                <option value="">Seleccione modelo</option>
+                <option value="">Seleccione un modelo</option>
             </select>
-            <script>
-                const modelos = {{ modelos | tojson }};
-                const marcaSelect = document.getElementById("marca");
-                const modeloSelect = document.getElementById("modelo");
 
-                marcaSelect.addEventListener("change", function() {
-                    const marcaSeleccionada = this.value;
-
-                    modeloSelect.innerHTML = '<option value="">Seleccione modelo</option>';
-
-                    if (marcaSeleccionada in modelos) {
-                        for (let modelo in modelos[marcaSeleccionada]) {
-                            let option = document.createElement("option");
-                            option.value = modelo;
-                            option.text = modelo;
-                            modeloSelect.appendChild(option);
-                        }
-                    }
-                });
-            </script>
-        </div>
-        <br>
-        <div>
             <label for="anio">Año:</label>
             <input type="number" id="anio" name="anio" min="2000" max="{{ anio_actual }}" required>
-        </div>
-        <br>
-        <div>
-            <label for="lado_der">Derecha</label>
-            <input type="radio" id="lado_der" name="lado" value="DER" required>
-            <label for="lado_izq">Izquierda</label>
-            <input type="radio" id="lado_izq" name="lado" value="IZQ" required>
-        </div>
-        <br>
-        <div>
-            <label for="ubicacion">Ubicación del producto:</label>
+
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="lado" value="DER" required> Derecha
+                </label>
+                <label>
+                    <input type="radio" name="lado" value="IZQ"> Izquierda
+                </label>
+            </div>
+
+            <label for="ubicacion">ubicación del producto:</label>
             <input type="text" id="ubicacion" name="ubicacion" required>
-        </div>
-        <br>
-        <div class="imagen">
+
             <label for="imagen">Subir una imagen:</label>
             <input type="file" id="imagen" name="imagen" accept="image/*" required>
-        </div>
-        <br>
-        <button type="submit">Registrar</button>
-    </form>
+
+            <button type="submit">Registrar</button>
+        </form>
+
+    </div>
+
+    <script>
+        const modelos = {{ modelos | tojson }};
+        const marcaSelect = document.getElementById("marca");
+        const modeloSelect = document.getElementById("modelo");
+
+        marcaSelect.addEventListener("change", function() {
+            const marcaSeleccionada = this.value;
+
+            modeloSelect.innerHTML = '<option value="">Seleccione modelo</option>';
+
+            if (marcaSeleccionada in modelos) {
+                for (let modelo in modelos[marcaSeleccionada]) {
+                    let option = document.createElement("option");
+                    option.value = modelo;
+                    option.text = modelo;
+                    modeloSelect.appendChild(option);
+                    }
+            }
+        });
+    </script>
+
+
 </body>
 </html>
