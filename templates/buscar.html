@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,37 +7,43 @@
     <link rel="stylesheet" href="../static/style_buscar.css" />
 </head>
 <body>
+    <div class="back">
+        <a href="index">← Volver al Inicio</a>
+    </div>
     <div class="buscar_container">
 
         <h1>Buscar un producto</h1>
 
-        <form method="GET" class="form_buscar">
-            <input type="text" name="busqueda" id="busquedaInput" placeholder="Buscar producto..." value="{{ busqueda }}">
+        <form method="get" class="form_buscar">
+
+            <input type="text"
+                   name="busqueda"
+                   id="busquedaInput"
+                   placeholder="Buscar producto..."
+                   value="{{ busqueda }}">
             <button type="submit">Buscar</button>
+            <div class="filtros">
+                <select name="marca">
+                    <option value="">Marca</option>
+                    {% for nombre, codigo in marcas.items() %}
+                        <option value="{{ nombre }}" {% if marca == nombre %}selected{% endif %}>
+                            {{ nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <select name="anio">
+                    <option value="">Año</option>
+                    {% for a in range(2000, anio_actual + 1) %}
+                        <option value="{{ a }}" {% if anio|string == a|string %}selected{% endif %}>
+                            {{ a }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Aplicar filtro</button>
+                <a href="{{ url_for('buscar') }}" class="btn-limpiar">Limpiar</a>
+            </div>
         </form>
-
-        <div class="filtros">
-
-            <select id="filtroMarca">
-                <option value="">Marca</option>
-                {% for nombre, codigo in marcas.items() %}
-                    <option value="{{ nombre }}">{{ nombre }}</option>
-                {% endfor %}
-            </select>
-
-            <select id="filtroAnio">
-                <option value="">Año</option>
-                {% for anio in range(2000, anio_actual + 1) %}
-                    <option value="{{ anio }}">{{ anio }}</option>
-                {% endfor %}
-            </select>
-
-            <button type="button" onclick="aplicarFiltro()">Aplicar filtro</button>
-
-            <!-- NUEVO BOTÓN -->
-            <button type="button" class="btn-limpiar" onclick="limpiarFiltros()">Limpiar</button>
-
-        </div>
         {% if productos %}
 
         <div class="buscar">
@@ -76,73 +82,17 @@
         <div class="paginacion">
 
             {% if pagina > 1 %}
-                <a href="{{ url_for('buscar', page=pagina-1, busqueda=busqueda) }}" class="btn-pagina">« Anterior</a>
+                <a href="{{ url_for('buscar',page=pagina-1, busqueda=busqueda, marca=marca, anio=anio) }}" class="btn-pagina">« Anterior</a>
             {% endif %}
 
             <span>Página {{ pagina }} de {{ total_paginas }}</span>
 
             {% if pagina < total_paginas %}
-                <a href="{{ url_for('buscar', page=pagina+1, busqueda=busqueda) }}" class="btn-pagina">Siguiente »</a>
+                <a href="{{ url_for('buscar', page=pagina+1, busqueda=busqueda, marca=marca, anio=anio) }}" class="btn-pagina">Siguiente »</a>
             {% endif %}
         </div>
 
     </div>
-
-    <script>
-    function aplicarFiltro() {
-
-        let marcaFiltro = document.getElementById("filtroMarca").value.toLowerCase();
-        let anioFiltro = document.getElementById("filtroAnio").value.toLowerCase();
-
-        let cards = document.querySelectorAll(".card");
-        let mensaje = document.getElementById("mensajeVacio");
-
-        let coincidencias = 0;
-
-        cards.forEach(function(card) {
-
-            let marca = card.dataset.marca.toLowerCase();
-            let anio = card.dataset.anio.toLowerCase();
-
-            let coincide = true;
-
-            if (marcaFiltro && marca !== marcaFiltro) {
-                coincide = false;
-            }
-
-            if (anioFiltro && anio !== anioFiltro) {
-                coincide = false;
-            }
-
-            if (coincide) {
-                card.style.display = "block";
-                coincidencias++;
-            } else {
-                card.style.display = "none";
-            }
-
-        });
-
-        // Mostrar mensaje si no hay resultados
-        mensaje.style.display = coincidencias === 0 ? "block" : "none";
-    }
-
-    function limpiarFiltros() {
-
-        document.getElementById("filtroMarca").value = "";
-        document.getElementById("filtroAnio").value = "";
-        document.getElementById("busquedaInput").value = "";
-
-        let cards = document.querySelectorAll(".card");
-        let mensaje = document.getElementById("mensajeVacio");
-
-        cards.forEach(function(card) {
-            card.style.display = "block";
-        });
-
-        mensaje.style.display = "none";
-    }
-    </script>
 
 </body>
 </html>

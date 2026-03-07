@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, url_for
 import sqlite3
 import os
 from werkzeug.utils import secure_filename
@@ -273,22 +273,27 @@ def generar_codigo(marca, modelo, anio, lado):
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    if "usuario" in session:
+        return redirect(url_for('index'))
     if request.method == 'POST':
         usuario = request.form['usuario']
         password = request.form['password']
         recordar = request.form.get('recordar')
 
         if usuario == "Armando Faros" and password == "Taller_Armando":
-            recordar = request.form.get('recordar')
             session.permanent = bool(recordar)
             session['usuario'] = usuario
-            return redirect("index")
+            return redirect(url_for('index'))
+
         return render_template('login.html',
                            error="Usuario o contraseña incorrectas")
     return render_template('login.html')
 
 @app.route('/index')
 def index():
+    if "usuario" not in session:
+        return redirect(url_for('login'))
+
     conexion = get_db()
     cursor = conexion.cursor()
 
@@ -305,6 +310,8 @@ def index():
 
 @app.route('/registrar', methods=['GET', 'POST'])
 def registrar():
+    if "usuario" not in session:
+        return redirect(url_for('login'))
     anio_actual = datetime.now().year
     codigo_generado = None
     mensaje_error = None
@@ -378,7 +385,10 @@ def registrar():
     )
 
 @app.route('/buscar', methods=['GET', 'POST'])
+@app.route('/buscar', methods=['GET'])
 def buscar():
+    if "usuario" not in session:
+        return redirect(url_for('login'))
 
     conexion = get_db()
     cursor = conexion.cursor()
@@ -386,37 +396,37 @@ def buscar():
 
     productos_por_pagina = 10
     pagina = request.args.get("page", 1, type=int)
-    filtro = request.args.get("busqueda", "").upper().strip()
+
+    busqueda = request.args.get("busqueda", "").upper().strip()
+    marca = request.args.get("marca", "")
+    anio = request.args.get("anio", "")
 
     offset = (pagina - 1) * productos_por_pagina
 
-    if filtro:
-        cursor.execute("""
-            SELECT COUNT(*) FROM PRODUCTO
-            WHERE MARCA LIKE ?
-            OR MODELO LIKE ?
-            OR CODIGO LIKE ?
-        """, ("%" + filtro + "%", "%" + filtro + "%", "%" + filtro + "%"))
+    query = "SELECT * FROM PRODUCTO WHERE 1=1"
+    params = []
 
-        total_productos = cursor.fetchone()[0]
+    if busqueda:
+        query += " AND (MARCA LIKE ? OR MODELO LIKE ? OR CODIGO LIKE ?)"
+        params.extend(["%"+busqueda+"%", "%"+busqueda+"%", "%"+busqueda+"%"])
 
-        cursor.execute("""
-            SELECT * FROM PRODUCTO
-            WHERE MARCA LIKE ?
-            OR MODELO LIKE ?
-            OR CODIGO LIKE ?
-            LIMIT ? OFFSET ?
-        """, ("%" + filtro + "%", "%" + filtro + "%", "%" + filtro + "%",
-              productos_por_pagina, offset))
-    else:
-        cursor.execute("SELECT COUNT(*) FROM PRODUCTO")
-        total_productos = cursor.fetchone()[0]
+    if marca:
+        query += " AND MARCA = ?"
+        params.append(marca)
 
-        cursor.execute("""
-            SELECT * FROM PRODUCTO
-            LIMIT ? OFFSET ?
-        """, (productos_por_pagina, offset))
+    if anio:
+        query += " AND YEAR = ?"
+        params.append(anio)
 
+    # contar resultados
+    cursor.execute(query.replace("SELECT *", "SELECT COUNT(*)"), params)
+    total_productos = cursor.fetchone()[0]
+
+    # agregar paginación
+    query += " LIMIT ? OFFSET ?"
+    params.extend([productos_por_pagina, offset])
+
+    cursor.execute(query, params)
     productos = cursor.fetchall()
 
     total_paginas = math.ceil(total_productos / productos_por_pagina)
@@ -430,11 +440,15 @@ def buscar():
         marcas=marcas,
         pagina=pagina,
         total_paginas=total_paginas,
-        busqueda=filtro
+        busqueda=busqueda,
+        marca=marca,
+        anio=anio
     )
 
 @app.route("/modificar")
 def modificar():
+    if "usuario" not in session:
+        return redirect(url_for('login'))
 
     conexion = get_db()
     cursor = conexion.cursor()
@@ -473,6 +487,8 @@ def modificar():
 
 @app.route("/editar/<int:id>", methods=["GET", "POST"])
 def editar(id):
+    if "usuario" not in session:
+        return redirect(url_for('login'))
 
     conexion = get_db()
     cursor = conexion.cursor()
@@ -539,6 +555,8 @@ def editar(id):
 
 @app.route("/eliminar", methods=["GET"])
 def eliminar():
+    if "usuario" not in session:
+        return redirect(url_for('login'))
 
     conexion = get_db()
     cursor = conexion.cursor()
@@ -577,7 +595,6 @@ def eliminar():
 
 @app.route("/eliminar_producto/<int:id>", methods=["POST"])
 def eliminar_producto(id):
-
     conexion = get_db()
     cursor = conexion.cursor()
 

@@ -1,209 +1,224 @@
-/*         BASE          */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f9;
-    margin: 0;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-/*     CONTENEDOR BUSCAR */
-.buscar_container {
-    width: 90%;
-    margin: 40px auto 60px auto;
+body{
+    background:#f4f6f9;
+    padding:10px;
 }
 
-.buscar_container h1 {
-    margin-bottom: 30px;
+/* BOTON VOLVER */
+
+.back{
+    margin-bottom:20px;
+    padding:40px 20px;
 }
 
-/*        FORM BUSCAR    */
-.form_buscar {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
+.back a{
+    text-decoration:none;
+    font-weight:bold;
+    color:#2d6cdf;
 }
 
-.form_buscar input {
-    flex: 1;
-    padding: 15px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    outline: none;
+/* CONTENEDOR PRINCIPAL */
+
+.buscar_container{
+    width:100%;
+    max-width:1700px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
 }
 
-.form_buscar input:focus {
-    border-color: #2d6cdf;
-    box-shadow: 0 0 0 3px rgba(45,108,223,0.1);
+h1{
+    text-align:center;
+    margin-bottom:25px;
 }
 
-/* Botón Buscar */
-.form_buscar button {
-    padding: 14px 28px;
-    border-radius: 10px;
-    border: none;
-    background: linear-gradient(135deg, #2d6cdf, #1f4fbf);
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 15px;
-    letter-spacing: 0.5px;
-    transition: all 0.25s ease;
+/* BUSCADOR */
+
+.form_buscar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    margin-bottom:20px;
 }
 
-/*      GRID PRODUCTOS   */
-.buscar {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+/* barra de busqueda ocupa toda la linea */
+.form_buscar input{
+    flex:1;
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
 }
 
-/*          CARD         */
-.card {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: 0.2s;
+/* boton buscar */
+.form_buscar button{
+    padding:10px 20px;
+    border:none;
+    background:#2d6cdf;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
 }
 
-.card img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
+.form_buscar button:hover{
+    background:#1f4fb8;
 }
 
-.card .info {
-    padding: 15px;
+/* FILTROS */
+
+.filtros{
+    width:100%;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-top:10px;
 }
 
-.card h3 {
-    margin: 0 0 10px 0;
+.filtros select,
+.filtros button{
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
 }
 
-/*        FILTROS        */
-.filtros {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: center;
-    margin-bottom: 20px;
+.filtros button{
+    background:#2d6cdf;
+    color:white;
+    border:none;
+    cursor:pointer;
 }
 
-/* Selects */
-.filtros select {
-    padding: 12px 15px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    outline: none;
-    min-width: 150px;
-    cursor: pointer;
-    transition: 0.2s;
-    background-color: #fff;
+.filtros button:hover{
+    background:#1f4fb8;
 }
 
-.filtros select:focus {
-    border-color: #2d6cdf;
-    box-shadow: 0 0 0 3px rgba(45,108,223,0.1);
+.btn-limpiar{
+    background:#999;
+    color:white;
+    padding:10px;
+    border-radius:6px;
+    text-decoration:none;
 }
 
-/* Botón aplicar */
-.filtros button {
-    padding: 12px 20px;
-    border-radius: 8px;
-    border: none;
-    background-color: #2d6cdf;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
+.btn-limpiar:hover{
+    background:#777;
 }
 
-/* Botón limpiar */
-.btn-limpiar {
-    padding: 12px 20px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    background-color: white;
-    cursor: pointer;
-    transition: 0.2s;
+/* TARJETAS */
+
+.buscar{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:25px;
 }
 
-/*     MENSAJE VACÍO     */
-.mensaje-vacio {
-    text-align: center;
-    margin-top: 30px;
-    font-weight: bold;
-    color: #888;
+.card{
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+    transition:transform 0.2s;
 }
 
-/*       PAGINACIÓN      */
-.paginacion {
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    font-size: 15px;
+.card:hover{
+    transform:translateY(-5px);
 }
 
-.paginacion span {
-    font-weight: 500;
-    color: #444;
+.card img{
+    width:100%;
+    aspect-ratio:1 / 1;
+    object-fit:contain;
+    background:#f8f8f8;
 }
 
-.btn-pagina {
-    padding: 10px 18px;
-    background-color: #2d6cdf;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: 0.2s ease;
-    display: inline-block;
+.info{
+    padding:15px;
 }
 
-.btn-pagina:hover {
-    background-color: #1f4fbf;
-    transform: translateY(-2px);
+.info h3{
+    font-size:16px;
+    margin-bottom:10px;
 }
 
-.btn-pagina.disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    pointer-events: none;
+.info p{
+    font-size:14px;
+    margin-bottom:5px;
 }
 
-/*       RESPONSIVE      */
-@media (max-width: 768px) {
-    .filtros {
-        flex-direction: column;
-        align-items: stretch;
+/* MENSAJES */
+
+.mensaje-vacio{
+    text-align:center;
+    margin-top:20px;
+    color:#666;
+}
+
+/* PAGINACION */
+
+.paginacion{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:15px;
+    margin-top:30px;
+}
+
+.btn-pagina{
+    padding:8px 14px;
+    background:#2d6cdf;
+    color:white;
+    border-radius:6px;
+    text-decoration:none;
+}
+
+.btn-pagina:hover{
+    background:#1f4fb8;
+}
+
+/* RESPONSIVE */
+
+/* tablets */
+@media (max-width:1100px){
+    .buscar{
+        grid-template-columns:repeat(2, 1fr);
+    }
+}
+
+/* celulares */
+@media (max-width:600px){
+
+    .buscar{
+        grid-template-columns:1fr;
+    }
+
+    /* buscador */
+    .form_buscar{
+        flex-direction:column;
+    }
+
+    .form_buscar input,
+    .form_buscar button{
+        width:100%;
+    }
+
+    /* filtros */
+    .filtros{
+        flex-direction:column;
+        align-items:stretch;
     }
 
     .filtros select,
-    .filtros button {
-        width: 100%;
+    .filtros button,
+    .btn-limpiar{
+        width:100%;
+        text-align:center;
     }
-}
-@media (max-width: 600px) {
-    .paginacion {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .btn-pagina {
-        width: 100%;
-        text-align: center;
-    }
-}
-
-.back a {
-    text-decoration: none;
-    font-weight: bold;
-    color: #2d6cdf;
 }
