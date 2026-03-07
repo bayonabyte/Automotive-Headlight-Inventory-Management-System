@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import math
 
 app = Flask(__name__)
-app.secret_key = "clave_segura"
+app.config['SECRET_KEY'] = 'clave_segura'
 app.permanent_session_lifetime = timedelta(days=6)
 
 #Base de datos
@@ -278,9 +278,9 @@ def login():
         password = request.form['password']
         recordar = request.form.get('recordar')
 
-        if usuario == "Armando Faros" or password == "Taller_Armando":
-            if recordar:
-                session.permanent = True
+        if usuario == "Armando Faros" and password == "Taller_Armando":
+            recordar = request.form.get('recordar')
+            session.permanent = bool(recordar)
             session['usuario'] = usuario
             return redirect("index")
         return render_template('login.html',
