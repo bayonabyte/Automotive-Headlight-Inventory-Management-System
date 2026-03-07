@@ -41,7 +41,7 @@ button {
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
-    margin-left: 5px;
+    margin-top: 10px;
 }
 
 button:hover {
@@ -100,4 +100,5 @@ tr:hover {
     text-decoration: none;
     font-weight: bold;
     color: #2d6cdf;
+    padding: 6px;
 }

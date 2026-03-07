@@ -5,63 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Producto</title>
     <link rel="stylesheet" href="../static/style_editar.css" />
+    <link rel="icon" href="../static/logo_web.png" type="image/png">
 </head>
 <body>
 
-<div class="back">
-    <a href="index">← Volver al Inicio</a>
-</div>
-
-<h1>Modificar Producto</h1>
-
-<form method="post">
-
-    <label>Marca:</label>
-    <select name="marca" id="marca" required>
-        {% for marca in marcas %}
-            <option value="{{ marca }}"
-            {% if marca == producto[1] %}selected{% endif %}>
-                {{ marca }}
-            </option>
-        {% endfor %}
-    </select>
-
-    <br><br>
-
-    <label>Modelo:</label>
-    <select name="modelo" id="modelo" required></select>
-
-    <br><br>
-
-    <label>Año:</label>
-    <input type="number" name="anio" value="{{ producto[3] }}" required>
-
-    <br><br>
-
-    <div class="radio-group">
-        <label>
-            <input type="radio" name="lado" value="DER"
-            {% if producto[4] == "DER" %}checked{% endif %}>
-            Derecha
-        </label>
-
-        <label>
-            <input type="radio" name="lado" value="IZQ"
-            {% if producto[4] == "IZQ" %}checked{% endif %}>
-            Izquierda
-        </label>
+    <div class="back">
+        <a href="{{ url_for('index') }}">← Volver al Inicio</a>
     </div>
 
-    <br><br>
+    <div class="registrar-container">
+        <h1>Modificar Producto</h1>
+        <form method="post" enctype="multipart/form-data">
+            <label>Marca:</label>
+            <select name="marca" id="marca" required>
+                {% for marca in marcas %}
+                    <option value="{{ marca }}"
+                    {% if marca == producto[1] %}selected{% endif %}>
+                        {{ marca }}
+                    </option>
+                {% endfor %}
+            </select>
 
-    <label>Ubicación:</label>
-    <input type="text" name="ubicacion"
-           value="{{ producto[5] }}" required>
+            <label>Modelo:</label>
+            <select name="modelo" id="modelo" required></select>
 
-    <br><br>
+            <label>Año:</label>
+            <input type="number" name="anio" value="{{ producto[3] }}" required>
 
-    <button type="submit">Guardar Cambios</button>
-</form>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="lado" value="DER"
+                    {% if producto[4] == "DER" %}checked{% endif %}>
+                    Derecha
+                </label>
+
+                <label>
+                    <input type="radio" name="lado" value="IZQ"
+                    {% if producto[4] == "IZQ" %}checked{% endif %}>
+                    Izquierda
+                </label>
+            </div>
+
+            <label>Ubicación:</label>
+            <input type="text" name="ubicacion"
+                   value="{{ producto[5] }}" required>
+
+            <div class="imagen-actual">
+                <p>Imagen actual:</p>
+                <img src="{{ url_for('static', filename='uploads/' + producto['IMAGEN']) }}" width="150">
+            </div>
+
+            <label>Cambiar imagen (opcional):</label>
+            <input type="file" name="imagen" accept="image/*">
+
+
+            <button type="submit">Guardar Cambios</button>
+        </form>
+
+    </div>
+
 
 <script>
 const modelos = {{ modelos | tojson }};

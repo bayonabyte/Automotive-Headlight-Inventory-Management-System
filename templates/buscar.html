@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar producto</title>
     <link rel="stylesheet" href="../static/style_buscar.css" />
+    <link rel="icon" href="../static/logo_web.png" type="image/png">
 </head>
 <body>
     <div class="back">
@@ -24,7 +25,7 @@
             <button type="submit">Buscar</button>
             <div class="filtros">
                 <select name="marca">
-                    <option value="">Marca</option>
+                    <option value="">Seleccione una marca</option>
                     {% for nombre, codigo in marcas.items() %}
                         <option value="{{ nombre }}" {% if marca == nombre %}selected{% endif %}>
                             {{ nombre }}
@@ -33,7 +34,7 @@
                 </select>
 
                 <select name="anio">
-                    <option value="">Año</option>
+                    <option value="">Seleccione un año</option>
                     {% for a in range(2000, anio_actual + 1) %}
                         <option value="{{ a }}" {% if anio|string == a|string %}selected{% endif %}>
                             {{ a }}

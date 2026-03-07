@@ -384,7 +384,6 @@ def registrar():
         modelos=modelos,
     )
 
-@app.route('/buscar', methods=['GET', 'POST'])
 @app.route('/buscar', methods=['GET'])
 def buscar():
     if "usuario" not in session:
@@ -429,7 +428,7 @@ def buscar():
     cursor.execute(query, params)
     productos = cursor.fetchall()
 
-    total_paginas = math.ceil(total_productos / productos_por_pagina)
+    total_paginas = max(1, math.ceil(total_productos / productos_por_pagina))
 
     conexion.close()
 
@@ -495,11 +494,11 @@ def editar(id):
 
     if request.method == "POST":
 
-        marca = request.form["marca"]
-        modelo = request.form["modelo"]
+        marca = request.form["marca"].strip().upper()
+        modelo = request.form["modelo"].strip().upper()
         anio = request.form["anio"]
         lado = request.form["lado"]
-        ubicacion = request.form["ubicacion"]
+        ubicacion = request.form["ubicacion"].strip().upper()
 
         nuevo_codigo = generar_codigo(marca, modelo, anio, lado)
 
@@ -517,7 +516,24 @@ def editar(id):
             conexion.close()
             return "Ya existe un producto con ese código."
 
-        if codigo_viejo != nuevo_codigo and imagen_vieja:
+        imagen = request.files.get("imagen")
+
+        if imagen and imagen.filename != "":
+
+            extension = os.path.splitext(imagen.filename)[1]
+            nombre_imagen = nuevo_codigo + extension
+
+            ruta = os.path.join("static/uploads", nombre_imagen)
+
+            if imagen_vieja:
+                ruta_vieja = os.path.join("static/uploads", imagen_vieja)
+                if os.path.exists(ruta_vieja):
+                    os.remove(ruta_vieja)
+
+            imagen.save(ruta)
+            imagen_vieja = nombre_imagen
+
+        elif codigo_viejo != nuevo_codigo and imagen_vieja:
 
             extension = os.path.splitext(imagen_vieja)[1]
 
@@ -531,10 +547,10 @@ def editar(id):
             imagen_vieja = nueva_imagen
 
         cursor.execute("""
-            UPDATE PRODUCTO
-            SET MARCA=?, MODELO=?, YEAR=?, LADO=?, UBICACION=?, CODIGO=?, IMAGEN=?
-            WHERE ID=?
-        """, (marca, modelo, anio, lado, ubicacion, nuevo_codigo, imagen_vieja, id))
+                    UPDATE PRODUCTO
+                    SET MARCA=?, MODELO=?, YEAR=?, LADO=?, UBICACION=?, CODIGO=?, IMAGEN=?
+                    WHERE ID=?
+                """, (marca, modelo, anio, lado, ubicacion, nuevo_codigo, imagen_vieja, id))
 
         conexion.commit()
         conexion.close()
@@ -595,6 +611,8 @@ def eliminar():
 
 @app.route("/eliminar_producto/<int:id>", methods=["POST"])
 def eliminar_producto(id):
+    if "usuario" not in session:
+        return redirect(url_for('login'))
     conexion = get_db()
     cursor = conexion.cursor()
 
