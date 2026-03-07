@@ -342,7 +342,14 @@ def registrar():
                 if imagen:
                     extension = os.path.splitext(imagen.filename)[1]
                     nombre_imagen = secure_filename(codigo_generado + extension)
-                    ruta_guardado = os.path.join('static/uploads', nombre_imagen)
+
+                    carpeta_uploads = os.path.join("static", "uploads")
+
+                    if not os.path.exists(carpeta_uploads):
+                        os.makedirs(carpeta_uploads)
+
+                    ruta_guardado = os.path.join(carpeta_uploads, nombre_imagen)
+
                     imagen.save(ruta_guardado)
 
                     cursor.execute("""
