@@ -102,3 +102,23 @@ tr:hover {
     color: #2d6cdf;
     padding: 6px;
 }
+
+.contenedor-vacio {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.caja-mensaje {
+    text-align: center;
+}
+.btn-volver {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 15px;
+    background-color: #2c3e50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
