@@ -280,7 +280,7 @@ def login():
         password = request.form['password']
         recordar = request.form.get('recordar')
 
-        if usuario == "Armando Faros" and password == "Taller_Armando":
+        if usuario == "A123" and password == "B123":
             session.permanent = bool(recordar)
             session['usuario'] = usuario
             return redirect(url_for('index'))
